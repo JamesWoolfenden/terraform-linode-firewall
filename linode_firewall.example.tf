@@ -14,72 +14,19 @@ resource "linode_firewall" "example" {
     }
   }
 
-  inbound_policy  = var.firewall["inbound_policy"]
-  outbound_policy = var.firewall["outbound_policy"]
-}
-
-variable "firewall" {
-  type = object({
-    label           = string
-    inbound_policy  = string
-    outbound_policy = string
-  })
-
-  default = {
-    label           = "myfirewall"
-    inbound_policy  = "DROP"
-    outbound_policy = "DROP"
+  dynamic "outbound" {
+    for_each = var.outbound
+    content {
+      label    = outbound.value["label"]
+      action   = outbound.value["action"]
+      protocol = outbound.value["protocol"]
+      ports    = outbound.value["ports"]
+      ipv4     = outbound.value["ipv4"]
+      ipv6     = outbound.value["ipv6"]
+    }
   }
 
-}
 
-
-variable "inbound" {
-  type = list(object({
-    label    = string
-    action   = string
-    protocol = string
-    ports    = string
-    ipv4     = list(string)
-    ipv6     = list(string)
-  }))
-
-  default = [{
-    label    = "http"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "80"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }]
-
-}
-
-variable "outbound" {
-  type = list(object({
-    label    = string
-    action   = string
-    protocol = string
-    ports    = string
-    ipv4     = list(string)
-    ipv6     = list(string)
-  }))
-  default = [
-    {
-      label    = "reject-http"
-      action   = "DROP"
-      protocol = "TCP"
-      ports    = "80"
-      ipv4     = ["0.0.0.0/0"]
-      ipv6     = ["::/0"]
-    },
-    {
-      label    = "reject-https"
-      action   = "DROP"
-      protocol = "TCP"
-      ports    = "443"
-      ipv4     = ["0.0.0.0/0"]
-      ipv6     = ["::/0"]
-  }]
-
+  inbound_policy  = var.firewall["inbound_policy"]
+  outbound_policy = var.firewall["outbound_policy"]
 }
