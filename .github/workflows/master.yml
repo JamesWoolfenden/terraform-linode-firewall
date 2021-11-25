@@ -12,6 +12,7 @@ env:
   terraform: 0.15.0
   tf_target_dir: example/examplea
   branch: master
+  LINODE_TOKEN: ${{ secrets.LINODE_TOKEN }}
 jobs:
   terraform:
     runs-on: ubuntu-latest
@@ -51,6 +52,8 @@ jobs:
           tf_actions_version: ${{ env.terraform }}
           tf_actions_subcommand: plan
           tf_actions_working_dir: ${{ env.tf_target_dir }}
+        env:
+          LINODE_TOKEN: ${{ secrets.LINODE_TOKEN }}
   security:
     runs-on: ubuntu-latest
     steps:
