@@ -36,7 +36,7 @@ module "firewall" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_linode"></a> [linode](#provider\_linode) | 1.13.4 |
+| <a name="provider_linode"></a> [linode](#provider\_linode) | >=1.25.0 |
 
 ## Modules
 
